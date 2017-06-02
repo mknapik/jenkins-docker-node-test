@@ -1,7 +1,17 @@
+stage('checkout') {
+    node() {
+        withCleanup {
+            checkout scm
+
+            stash 'source'
+        }
+    }
+}
+
 stage('docker build') {
     node('docker') {
         withCleanup {
-            checkout scm
+            unstash 'source'
 
             def myEnv = docker.build 'jenkins-docker-test:latest'
             myEnv.inside {
@@ -14,7 +24,7 @@ stage('docker build') {
 stage('docker compose') {
     node('docker') {
         withCleanup {
-            checkout scm
+            unstash 'source'
 
             withDockerCompose { compose ->
                 compose.exec('app', 'npm --version')
