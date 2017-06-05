@@ -2,3 +2,4 @@ version: '2'
 services:
   app:
     build: .
+    image: "jenkins-docker-node-test"
